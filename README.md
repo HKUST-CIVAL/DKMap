@@ -76,7 +76,20 @@ Download the source code from the Python package file.
 - For further interactive exploration of the dataset, please refer to ```Interactive_contour_visualization.ipynb```.
 
 
+## Citation
 
+```bibtex
+@ARTICLE{ye2026DKMap,
+  author={Ye, Yilin and Ruan, Chenxi and Zhang, Yu and Deng, Zikun and Zeng, Wei},
+  journal={IEEE Transactions on Visualization and Computer Graphics}, 
+  title={{DKMap}: Interactive Exploration of Vision-Language Alignment in Multimodal Embeddings via Dynamic Kernel Enhanced Projection}, 
+  year={2026},
+  volume={32},
+  number={1},
+  pages={440-450},
+  doi={10.1109/TVCG.2025.3642641}
+}
+```
 
 
 
