@@ -4,7 +4,7 @@ from flask_cors import CORS
 
 import os
 import numpy as np
-import clip
+# import clip
 from scipy.optimize import direct, Bounds
 
 import torch
@@ -32,7 +32,7 @@ clip_model.cuda().eval()
 
 from keybert import KeyBERT
 
-df = pd.read_csv('hps_diffusiondb_merged.csv') # your_file_path
+df = pd.read_csv('hps_diffusiondb_merged2.csv') # your_file_path
 image_paths = df['im_path'].tolist() 
 
 app = Flask(__name__)
@@ -105,6 +105,50 @@ def analyze_prompts():
 
     return normalized_keyword_similarities
 
+@app.route('/api/test/get-data/', methods=['GET'])
+def get_data():
+    """Return dataset information as JSON"""
+    try:
+        # Check if DataFrame is loaded
+        if df is None or df.empty:
+            return jsonify({'error': 'Dataset not loaded'}), 500
+        
+        # Convert DataFrame to JSON-serializable format
+        data = {
+            'positions': [],
+            'prompts': [],
+            'image_paths': [],
+            'indices': []
+        }
+        
+        # Safely extract columns with existence checks
+        if 'x' in df.columns and 'y' in df.columns:
+            data['positions'] = df[['x', 'y']].values.tolist()
+        else:
+            print("Warning: 'x' or 'y' column not found in CSV")
+            print("Available columns:", df.columns.tolist())
+        
+        if 'prompt' in df.columns:
+            data['prompts'] = df['prompt'].fillna('').tolist()
+        else:
+            print("Warning: 'prompt' column not found in CSV")
+            data['prompts'] = [''] * len(df)
+        
+        if 'im_path' in df.columns:
+            data['image_paths'] = df['im_path'].fillna('').tolist()
+        else:
+            print("Warning: 'im_path' column not found in CSV")
+            data['image_paths'] = [''] * len(df)
+        
+        data['indices'] = df.index.tolist()
+        
+        print(f"Dataset loaded: {len(data['positions'])} positions, {len(data['prompts'])} prompts")
+        
+        return jsonify(data)
+    
+    except Exception as e:
+        print(f"Error in get_data: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/test/similar-search/', methods=['POST'])
 def find_similar_images():

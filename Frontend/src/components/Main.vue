@@ -586,6 +586,7 @@ export default {
             });
 
             canvas.addEventListener("click", async (event) => {
+                console.log(isSelecting+"click");
                 if(isSelecting)return;
                 if (canvas.style.pointerEvents === "auto") {
                     let rect = canvas.getBoundingClientRect();
